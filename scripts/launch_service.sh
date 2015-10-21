@@ -6,7 +6,7 @@ function abort()
 	exit 1
 }
 
-CONTAINER_HOST="$(/sbin/ifconfig enp0s3 | grep 'inet\ ' | cut -d: -f2 | awk '{ print $2}')"
+CONTAINER_HOST="$(/sbin/ifconfig eth0 | grep 'inet\ ' | cut -d: -f2 | awk '{ print $2}')"
 DIRECTORY_HOST="${CONTAINER_HOST}"
 PORT=0
 VERSION=1

@@ -17,8 +17,12 @@ Vagrant.configure(2) do |config|
   config.vm.provider 'virtualbox' do |vb|
     vb.gui = false
     vb.memory = '512'
+    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
 
   config.vm.provision "shell", path: "bootstrap.sh"
   config.vm.provision "file", source: "scripts/launch_service.sh", destination: "launch_service.sh"
+  config.vm.provision "shell", inline: "chmod +x launch_service.sh"
 end

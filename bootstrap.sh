@@ -2,6 +2,7 @@
 
 # Update the system
 sudo yum -y update
+sudo yum -y install nano
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Datawire
@@ -10,7 +11,7 @@ sudo yum -y update
 curl -s https://packagecloud.io/install/repositories/datawire/stable/script.rpm.sh | sudo bash
 sudo yum -y install datawire-directory
 
-IP="$(/sbin/ifconfig enp0s3 | grep 'inet\ ' | cut -d: -f2 | awk '{ print $2}')"
+IP="$(/sbin/ifconfig eth0 | grep 'inet\ ' | cut -d: -f2 | awk '{ print $2}')"
 sed -i "s/directory_host: localhost/directory_host: ${IP}/g" /etc/datawire/datawire.conf
 
 sudo systemctl enable directory
@@ -46,3 +47,7 @@ sudo rm -f \
 
 sudo systemctl stop firewalld
 sudo systemctl disable firewalld
+
+# pull the images used
+docker -D pull quay.io/datawire/bakerstreet-hello:v1
+docker -D pull quay.io/datawire/bakerstreet-hello:v2
