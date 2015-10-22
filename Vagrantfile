@@ -24,5 +24,6 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", path: "bootstrap.sh"
   config.vm.provision "file", source: "scripts/launch_service.sh", destination: "launch_service.sh"
-  config.vm.provision "shell", inline: "chmod +x launch_service.sh"
+  config.vm.provision "file", source: "scripts/kill_service.sh", destination: "kill_service.sh"
+  config.vm.provision "shell", inline: "chmod +x launch_service.sh kill_service.sh"
 end
