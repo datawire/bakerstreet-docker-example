@@ -37,11 +37,70 @@ Let's launch the first service. You can use the convenient helper script availab
 What that command is indicating is that we want to start a new service and expose it via port 9000. The v=1 parameter
 indicates that we will start the :v1 tagged Docker image.
 
-Once the container is loaded 
+Once the container is loaded we can pretend to be a consumer client of the application by running the following command:
 
+`docker exec -it client curl localhost:8000/health`
 
-3. Start your first service `./launch_service.sh -p=9000 -v=1`
-4. Start your second service
-5. Start your third service
-6. Start your fourth service
-7. 
+which should return something like this:
+
+```json
+{
+  "index": 73, 
+  "message": "Hello, world!", 
+  "service_id": "57c135da-a8d6-434c-8571-8290bafa23e5", 
+  "version": "1"
+}
+```
+
+Let's start another service up. It's important we use a different port because Docker can only bind and map ports on a
+1:1 cardinality.
+
+`./launch_service.sh -p=9001 -v=1`
+
+The re-run the client twice and the output should be something like this (notice the service ID is different):
+
+```
+for i in 1 2 ; do docker exec client curl -s http://localhost:8000/hello ; done
+{
+  "index": 391, 
+  "message": "Hello, world!", 
+  "service_id": "57c135da-a8d6-434c-8571-8290bafa23e5", 
+  "version": "1"
+}{
+  "index": 251, 
+  "message": "Hello, world!", 
+  "service_id": "74688615-2938-4d5f-9dc9-2bdabba1f15e", 
+  "version": "1"
+}
+```
+
+Let's canary launch a brand new **2.0** version of our service. The 2.0 version doesn't do anything functionally
+different besides report a new version, but, it is sufficient to show you how Baker Street enabled containers can be
+canary released!
+
+`./launch_service.sh -p=9002 -v=2`
+
+Then run our test loop:
+
+```
+for i in 1 2 3; do docker exec client curl -s http://localhost:8000/hello ; done
+{
+  "index": 452, 
+  "message": "Hello, world!", 
+  "service_id": "57c135da-a8d6-434c-8571-8290bafa23e5", 
+  "version": "1"
+}{
+  "index": 312, 
+  "message": "Hello, world!", 
+  "service_id": "74688615-2938-4d5f-9dc9-2bdabba1f15e", 
+  "version": "1"
+}{
+  "index": 4, 
+  "message": "Hello, world!", 
+  "service_id": "41cb6d1a-1aaa-4cf2-94d2-a7e93783b07d", 
+  "version": "2"
+}
+```
+
+And voila! Notice the third service queried is our new v2.0 service running alongside our v1.0 service and it's also
+available from the same URL!
