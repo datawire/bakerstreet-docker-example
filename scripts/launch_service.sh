@@ -42,7 +42,7 @@ ID=`docker run -d\
     -p ${PORT}:8080\
     -e mapped_port=${PORT}\
     -e dw_directory_host=${DIRECTORY_HOST}\
-    -name hello_${PORT}\
+    --name hello_${PORT}\
     --add-host dockerhost:${CONTAINER_HOST}\
     quay.io/datawire/bakerstreet-hello:v${VERSION}`
 sleep 1

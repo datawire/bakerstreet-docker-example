@@ -51,3 +51,15 @@ sudo systemctl disable firewalld
 # pull the images used
 docker -D pull quay.io/datawire/bakerstreet-hello:v1
 docker -D pull quay.io/datawire/bakerstreet-hello:v2
+
+# boot what will effectively be the "client" container; the mapped_port isn't important here because we're going to
+# shutdown the service.
+docker run -d\
+ -e mapped_port=8000\
+ -e dw_directory_host=${IP}\
+ --name=client\
+ --add-host dockerhost:${IP}\
+ quay.io/datawire/bakerstreet-hello:v1
+sleep 5
+docker exec client sv down watson
+docker exec client sv down hello
