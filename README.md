@@ -1,7 +1,7 @@
 # Baker Street Docker Example #
 
 A pure example of running Docker and Baker Street together without a scheduling or orchestration framework such as
-Kubernetes, Swarm, Flynn or any other higher-level container management framework.
+Kubernetes, Swarm, Flynn, or another higher-level container management framework.
 
 ## Requirements ##
 
@@ -57,7 +57,7 @@ Let's start another service up. It's important we use a different port because D
 
 `./launch_service.sh -p=9001 -v=1`
 
-The re-run the client twice and the output should be something like this (notice the service ID is different):
+Then re-run the client twice and the output should be something like this (notice the service ID is different):
 
 ```
 for i in 1 2 ; do docker exec client curl -s http://localhost:8000/hello ; done
@@ -75,7 +75,7 @@ for i in 1 2 ; do docker exec client curl -s http://localhost:8000/hello ; done
 ```
 
 Let's canary launch a brand new **2.0** version of our service. The 2.0 version doesn't do anything functionally
-different besides report a new version, but, it is sufficient to show you how Baker Street enabled containers can be
+different besides report a new version, but it is sufficient to show you how Baker Street enabled containers can be
 canary released!
 
 `./launch_service.sh -p=9002 -v=2`
